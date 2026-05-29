@@ -1,0 +1,36 @@
+/* ══════════════════════════════════════════════════════════
+   AutoFill Engine — Content Styles
+   Toast notification injected into target pages.
+   ══════════════════════════════════════════════════════════ */
+
+#af-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2147483647;
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: rgba(10, 10, 15, 0.95);
+  color: #34D399;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(79, 140, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: af-slide-in 0.3s ease;
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+}
+
+@keyframes af-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

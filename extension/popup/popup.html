@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoFill Engine</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- ── Header ────────────────────────────────────────── -->
+  <header id="header">
+    <div class="header-left">
+      <div class="logo">AF</div>
+      <div class="header-info">
+        <h1>AutoFill Engine</h1>
+        <div class="status-row">
+          <span id="statusDot" class="status-dot offline"></span>
+          <span id="statusText" class="status-text">Checking...</span>
+        </div>
+      </div>
+    </div>
+    <button id="settingsBtn" class="icon-btn" title="Settings">⚙</button>
+  </header>
+
+  <!-- ── Settings Panel (hidden by default) ────────────── -->
+  <div id="settingsPanel" class="settings-panel hidden">
+    <label class="settings-label">Backend URL</label>
+    <input
+      type="url"
+      id="backendUrlInput"
+      class="settings-input"
+      placeholder="http://localhost:8080"
+    >
+    <button id="saveSettingsBtn" class="btn btn-sm">Save</button>
+  </div>
+
+  <!-- ── Upload Screen ─────────────────────────────────── -->
+  <div id="uploadScreen" class="screen">
+    <div class="screen-header">
+      <h2>Resume Ingestion</h2>
+      <p class="subtitle">Upload your resume to build a structured profile</p>
+    </div>
+
+    <label class="upload-card" for="fileInput">
+      <div class="upload-icon">↑</div>
+      <span class="upload-label">Select Document</span>
+      <span class="upload-hint">PDF or DOCX • Max 5 MB</span>
+    </label>
+    <input type="file" id="fileInput" accept=".pdf,.docx" hidden>
+
+    <!-- Selected file preview -->
+    <div id="filePreview" class="file-preview hidden">
+      <div class="file-icon">◆</div>
+      <div class="file-details">
+        <span id="fileName" class="file-name"></span>
+        <span id="fileMeta" class="file-meta"></span>
+      </div>
+      <button id="clearFileBtn" class="icon-btn" title="Remove">✕</button>
+    </div>
+
+    <!-- Error display -->
+    <div id="errorBox" class="error-box hidden">
+      <span id="errorText"></span>
+    </div>
+
+    <!-- Parse button -->
+    <button id="parseBtn" class="btn btn-primary hidden">
+      <span id="parseBtnText">Parse Resume</span>
+      <span id="parseSpinner" class="spinner hidden"></span>
+    </button>
+  </div>
+
+  <!-- ── Profile Screen ────────────────────────────────── -->
+  <div id="profileScreen" class="screen hidden">
+    <!-- Profile header -->
+    <div class="profile-header">
+      <div class="avatar" id="avatar"></div>
+      <div class="profile-info">
+        <h2 id="profileName"></h2>
+        <p id="profileEmail" class="profile-email"></p>
+        <p id="profilePhone" class="profile-phone"></p>
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div id="locationRow" class="location-row hidden">
+      <span class="location-icon">◎</span>
+      <span id="locationText"></span>
+    </div>
+
+    <!-- Quick stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <span id="expCount" class="stat-value">0</span>
+        <span class="stat-label">Experience</span>
+      </div>
+      <div class="stat-card">
+        <span id="eduCount" class="stat-value">0</span>
+        <span class="stat-label">Education</span>
+      </div>
+      <div class="stat-card">
+        <span id="skillCount" class="stat-value">0</span>
+        <span class="stat-label">Skills</span>
+      </div>
+    </div>
+
+    <!-- Skills chips -->
+    <div id="skillsContainer" class="skills-container hidden">
+      <h3 class="section-title">Skills</h3>
+      <div id="skillsChips" class="chips"></div>
+    </div>
+
+    <!-- Fill button -->
+    <button id="fillBtn" class="btn btn-primary btn-fill">
+      <span class="fill-icon">⚡</span>
+      Fill This Page
+    </button>
+
+    <!-- Actions -->
+    <div class="actions-row">
+      <button id="reuploadBtn" class="btn btn-ghost">↻ Re-upload</button>
+    </div>
+  </div>
+
+  <!-- ── Fill Feedback ─────────────────────────────────── -->
+  <div id="fillFeedback" class="fill-feedback hidden">
+    <span id="fillFeedbackText"></span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
