@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const path = require('path');
 const resumeRoutes = require('./routes/resumeRoutes');
 
 const app = express();
@@ -10,6 +11,9 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Serve static assets (Landing page, og-image)
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Serverless-safe DB connection (cached across warm invocations)
 let dbConnected = false;

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Primary Meta Tags -->
+  <title>AutoFill Engine - One-Click AI Job Application Autofill</title>
+  <meta name="title" content="AutoFill Engine - One-Click AI Job Application Autofill">
+  <meta name="description" content="Upload your resume once, fill any job application instantly. Powered by Gemini AI, secure local-first storage, and zero-hassle parsing.">
+  
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://formfiller-extension.vercel.app/">
+  <meta property="og:title" content="AutoFill Engine - AI-Powered Job Application Autofill">
+  <meta property="og:description" content="Upload your resume once, fill any job application instantly. Powered by Gemini AI, secure local-first storage, and zero-hassle parsing.">
+  <meta property="og:image" content="https://formfiller-extension.vercel.app/og-image.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://formfiller-extension.vercel.app/">
+  <meta property="twitter:title" content="AutoFill Engine - AI-Powered Job Application Autofill">
+  <meta property="twitter:description" content="Upload your resume once, fill any job application instantly. Powered by Gemini AI, secure local-first storage, and zero-hassle parsing.">
+  <meta property="twitter:image" content="https://formfiller-extension.vercel.app/og-image.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0A0A0F;
+      --surface: #12121A;
+      --surface-border: #1F1F2E;
+      --primary: #4F8CFF;
+      --primary-glow: rgba(79, 140, 255, 0.15);
+      --text: #F3F4F6;
+      --text-muted: #9CA3AF;
+      --success: #10B981;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Background Glows */
+    .glow-container {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 600px;
+      overflow: hidden;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .glow-orb {
+      position: absolute;
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+      filter: blur(80px);
+    }
+
+    /* Navigation */
+    nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo-badge {
+      background: var(--primary-glow);
+      color: var(--primary);
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 99px;
+      border: 1px solid rgba(79, 140, 255, 0.3);
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    /* Hero Section */
+    .hero {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 2rem 3rem;
+      text-align: center;
+    }
+
+    .badge-hero {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      padding: 0.4rem 1rem;
+      border-radius: 99px;
+      margin-bottom: 2rem;
+      animation: fadeIn 0.8s ease;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--success);
+    }
+
+    .badge-text {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #FFFFFF 0%, #A5C4FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.1rem, 2.5vw, 1.25rem);
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 3rem;
+    }
+
+    /* Primary CTA Button */
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--primary);
+      color: #FFFFFF;
+      text-decoration: none;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      box-shadow: 0 4px 20px rgba(79, 140, 255, 0.4);
+      transition: var(--transition);
+      cursor: pointer;
+      border: none;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(79, 140, 255, 0.6);
+    }
+
+    .cta-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    /* Core Features Grid */
+    .features {
+      max-width: 1100px;
+      margin: 5rem auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(79, 140, 255, 0.3);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--primary-glow);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(79, 140, 255, 0.2);
+    }
+
+    .card-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    /* Installation Steps */
+    .installation {
+      max-width: 800px;
+      margin: 5rem auto 8rem;
+      padding: 0 2rem;
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .steps {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .step {
+      display: flex;
+      gap: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      background: var(--primary-glow);
+      color: var(--primary);
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(79, 140, 255, 0.2);
+      flex-shrink: 0;
+    }
+
+    .step-content h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .step-content p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .step-content code {
+      background: var(--bg);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-family: monospace;
+      color: #FFF;
+      font-size: 0.85rem;
+      border: 1px solid var(--surface-border);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--surface-border);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        padding-top: 3rem;
+      }
+      .card {
+        padding: 2rem;
+      }
+      .step {
+        padding: 1.25rem;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow-container">
+    <div class="glow-orb"></div>
+  </div>
+
+  <nav>
+    <a href="#" class="logo">
+      AutoFill Engine <span class="logo-badge">v1.0</span>
+    </a>
+    <div class="nav-links">
+      <a href="https://github.com/Ahbiz/cv" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="badge-hero">
+      <span class="badge-dot"></span>
+      <span class="badge-text">AI engine active & connected</span>
+    </div>
+    <h1>One-click job applications.<br>Zero hassle.</h1>
+    <p class="hero-subtitle">Upload your resume once. Instantly auto-fill application forms on greenhouse, lever, or any other hiring portal. 100% secure, local-first browser extension.</p>
+    
+    <!-- Link placeholder that user can replace with their actual Google Drive ZIP share link -->
+    <a href="https://github.com/Ahbiz/cv" target="_blank" rel="noopener" class="cta-btn">
+      <svg viewBox="0 0 24 24">
+        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+      </svg>
+      Get the Extension Zip
+    </a>
+  </section>
+
+  <section class="features">
+    <div class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21l8.904-4.473L21 9l-3.488-3.488-8.7 8.7z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3 3" />
+        </svg>
+      </div>
+      <h3>Gemini AI-Powered Parsing</h3>
+      <p>Intelligently translates your PDF/DOCX resume structure into clean, reliable profile records. Perfect handling of contact details, full career history, and education tables.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+      <h3>Universal Autofill Engine</h3>
+      <p>Works on Greenhouse, Lever, Workday, and other modern application portals. Fills input fields, selects dropdown states, and executes direct event dispatch to bypass custom SPA validations.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+      </div>
+      <h3>Local-First & Secure</h3>
+      <p>Your parsed profile remains saved on your local machine using Chrome secure storage. No central databases, no tracking, and total client-side privacy control.</p>
+    </div>
+  </section>
+
+  <section class="installation">
+    <h2 class="section-title">How to Install</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Download the Extension Zip</h4>
+          <p>Click the download button above or grab the latest `AutoFillEngine.zip` package from your shared source folder.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Enable Chrome Developer Mode</h4>
+          <p>Open **Chrome**, go to <code>chrome://extensions</code> in your URL bar, and turn on the **Developer mode** toggle in the top-right corner.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Load the Extension</h4>
+          <p>Unzip the folder. In Chrome, click the **Load unpacked** button in the top-left, and select the extracted extension folder.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Upload and Fill</h4>
+          <p>Pin the **AF** icon to your toolbar. Click it, select your resume file, click parse, and navigate to any job application form to fill instantly!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 AutoFill Engine. Powered by Gemini AI. Safe, secure, and open-source.</p>
+  </footer>
+
+</body>
+</html>
